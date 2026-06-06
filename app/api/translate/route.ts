@@ -13,10 +13,10 @@ import {
 import { captureServerEvent } from '@/shared/analytics/posthog-server';
 
 // Per-route kill switch for translate-route PostHog events.
-// Flip to `false` to silence all events emitted by this route
-// (e.g. on the PostHog free plan to stay under the event quota).
+// Currently disabled to stay under the PostHog free plan event quota.
+// Flip to `true` to re-enable all events emitted by this route.
 // Other server-side PostHog callers are unaffected.
-const TRANSLATE_ANALYTICS_ENABLED = true;
+const TRANSLATE_ANALYTICS_ENABLED = false;
 const trackTranslate: (
   event: string,
   properties?: Record<string, unknown>,
