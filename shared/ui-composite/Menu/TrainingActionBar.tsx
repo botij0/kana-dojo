@@ -333,7 +333,7 @@ const TrainingActionBar: React.FC<ITopBarProps> = ({
                         // Mobile: fixed widths (25% for Blitz/Gauntlet, 50% for Classic), no x-padding
                         // Desktop (sm+): flex-based sizing with padding
                         id === 'classic'
-                          ? 'w-1/2 sm:w-auto sm:max-w-sm sm:flex-2 sm:px-6'
+                          ? 'w-full sm:w-3/4 md:w-1/2 md:max-w-sm md:px-6'
                           : 'w-1/4 sm:w-auto sm:max-w-sm sm:flex-1 sm:px-6',
                         'rounded-3xl transition-colors duration-200',
                         'border-b-10',
@@ -358,7 +358,7 @@ const TrainingActionBar: React.FC<ITopBarProps> = ({
                           id === 'classic' && 'animate-bounce',
                         )}
                       />
-                      <span className='hidden whitespace-nowrap sm:inline'>
+                      <span className='whitespace-nowrap'>
                         {label}
                       </span>
                     </button>
