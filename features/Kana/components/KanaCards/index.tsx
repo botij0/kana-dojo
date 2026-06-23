@@ -121,7 +121,12 @@ interface KanaCardsProps {
   selectedSubset?: string;
 }
 
-const KanaCards = ({ filter = 'all', viewMode, selectedKanaType, selectedSubset }: KanaCardsProps) => {
+const KanaCards = ({
+  filter = 'all',
+  viewMode,
+  selectedKanaType,
+  selectedSubset,
+}: KanaCardsProps) => {
   const { playClick } = useClick();
 
   const effectiveFilter: KanaCardsFilter =
@@ -219,115 +224,119 @@ const KanaCards = ({ filter = 'all', viewMode, selectedKanaType, selectedSubset 
               />
             ))}
           </div>
+          <div aria-hidden className='py-4' />
         </div>
       );
     }
   }
 
   return (
-    <div className='flex w-full flex-col gap-2 sm:flex-row sm:items-start'>
-      {(() => {
-        const compactGroups = kanaGroups.filter(g => {
-          if (filter === 'hiragana')
-            return g.name.toLowerCase().startsWith('hiragana');
-          if (filter === 'katakana')
-            return g.name.toLowerCase().startsWith('katakana');
-          return true;
-        });
-        const isSingleCompact = compactGroups.length === 1;
-        return compactGroups.map(group => {
-          const groupHidden = isHidden(group.name);
-          const [mainTitle, japaneseTitle] = group.name.split(' ');
+    <div className='flex w-full flex-col gap-4'>
+      <div className='flex w-full flex-col gap-2 sm:flex-row sm:items-start'>
+        {(() => {
+          const compactGroups = kanaGroups.filter(g => {
+            if (filter === 'hiragana')
+              return g.name.toLowerCase().startsWith('hiragana');
+            if (filter === 'katakana')
+              return g.name.toLowerCase().startsWith('katakana');
+            return true;
+          });
+          const isSingleCompact = compactGroups.length === 1;
+          return compactGroups.map(group => {
+            const groupHidden = isHidden(group.name);
+            const [mainTitle, japaneseTitle] = group.name.split(' ');
 
-          return (
-            <Fragment key={group.name}>
-              <form
-                className={clsx(
-                  'flex w-full flex-col gap-2 p-4',
-                  isSingleCompact ? 'sm:w-full' : 'sm:w-1/2',
-                  cardBorderStyles,
-                )}
-              >
-                {/* Group Header */}
-                <legend
+            return (
+              <Fragment key={group.name}>
+                <form
                   className={clsx(
-                    'group flex flex-row items-center hover:cursor-pointer',
-                    USE_NEW_KANA_BADGE_DESIGN
-                      ? 'gap-2 text-[1.9rem]'
-                      : 'gap-1 text-2xl',
+                    'flex w-full flex-col gap-2 p-4',
+                    isSingleCompact ? 'sm:w-full' : 'sm:w-1/2',
+                    cardBorderStyles,
                   )}
-                  onClick={() => toggleVisibility(group.name)}
                 >
-                  <ChevronUp className={chevronClasses(groupHidden)} />
-                  {USE_NEW_KANA_BADGE_DESIGN && (
-                    <span className={headingBadgeClasses.group}>
-                      {groupKanaBadgeByName[group.name] ?? 'あ'}
-                    </span>
-                  )}
-                  <h3 className='flex items-center gap-2'>
-                    <span>{mainTitle}</span>
-                    <span className='hidden text-(--secondary-color) xl:inline'>
-                      {japaneseTitle}
-                    </span>
-                  </h3>
-                </legend>
+                  {/* Group Header */}
+                  <legend
+                    className={clsx(
+                      'group flex flex-row items-center hover:cursor-pointer',
+                      USE_NEW_KANA_BADGE_DESIGN
+                        ? 'gap-2 text-[1.9rem]'
+                        : 'gap-1 text-2xl',
+                    )}
+                    onClick={() => toggleVisibility(group.name)}
+                  >
+                    <ChevronUp className={chevronClasses(groupHidden)} />
+                    {USE_NEW_KANA_BADGE_DESIGN && (
+                      <span className={headingBadgeClasses.group}>
+                        {groupKanaBadgeByName[group.name] ?? 'あ'}
+                      </span>
+                    )}
+                    <h3 className='flex items-center gap-2'>
+                      <span>{mainTitle}</span>
+                      <span className='hidden text-(--secondary-color) xl:inline'>
+                        {japaneseTitle}
+                      </span>
+                    </h3>
+                  </legend>
 
-                {/* Subsets */}
-                {!groupHidden &&
-                  group.subsets.map((subset, index) => {
-                    const subsetHidden = isHidden(subset.name);
-                    const isLastSubset = index === group.subsets.length - 1;
+                  {/* Subsets */}
+                  {!groupHidden &&
+                    group.subsets.map((subset, index) => {
+                      const subsetHidden = isHidden(subset.name);
+                      const isLastSubset = index === group.subsets.length - 1;
 
-                    return (
-                      <div
-                        key={subset.name}
-                        className='flex w-full flex-col gap-2'
-                      >
-                        <div>
-                          {/* Subset Header */}
-                          <h4
-                            className={clsx(
-                              'group flex flex-row items-center hover:cursor-pointer',
-                              USE_NEW_KANA_BADGE_DESIGN
-                                ? 'gap-2 text-[1.5rem]'
-                                : 'gap-1 text-xl',
+                      return (
+                        <div
+                          key={subset.name}
+                          className='flex w-full flex-col gap-2'
+                        >
+                          <div>
+                            {/* Subset Header */}
+                            <h4
+                              className={clsx(
+                                'group flex flex-row items-center hover:cursor-pointer',
+                                USE_NEW_KANA_BADGE_DESIGN
+                                  ? 'gap-2 text-[1.5rem]'
+                                  : 'gap-1 text-xl',
+                              )}
+                              onClick={() => toggleVisibility(subset.name)}
+                            >
+                              <ChevronUp
+                                className={chevronClasses(subsetHidden)}
+                                size={24}
+                              />
+                              {USE_NEW_KANA_BADGE_DESIGN && (
+                                <span className={headingBadgeClasses.subset}>
+                                  {subsetKanaBadgeByName[subset.name] ?? 'あ'}
+                                </span>
+                              )}
+                              <span>{subset.name.slice(1)}</span>
+                            </h4>
+
+                            {/* Subset Content */}
+                            {!subsetHidden && (
+                              <Subset
+                                sliceRange={subset.sliceRange}
+                                group={group.name}
+                                subgroup={subset.name}
+                              />
                             )}
-                            onClick={() => toggleVisibility(subset.name)}
-                          >
-                            <ChevronUp
-                              className={chevronClasses(subsetHidden)}
-                              size={24}
-                            />
-                            {USE_NEW_KANA_BADGE_DESIGN && (
-                              <span className={headingBadgeClasses.subset}>
-                                {subsetKanaBadgeByName[subset.name] ?? 'あ'}
-                              </span>
-                            )}
-                            <span>{subset.name.slice(1)}</span>
-                          </h4>
+                          </div>
 
-                          {/* Subset Content */}
-                          {!subsetHidden && (
-                            <Subset
-                              sliceRange={subset.sliceRange}
-                              group={group.name}
-                              subgroup={subset.name}
-                            />
+                          {/* Divider (except after last subset) */}
+                          {!isLastSubset && (
+                            <hr className='w-full border-t border-(--border-color)' />
                           )}
                         </div>
-
-                        {/* Divider (except after last subset) */}
-                        {!isLastSubset && (
-                          <hr className='w-full border-t border-(--border-color)' />
-                        )}
-                      </div>
-                    );
-                  })}
-              </form>
-            </Fragment>
-          );
-        });
-      })()}
+                      );
+                    })}
+                </form>
+              </Fragment>
+            );
+          });
+        })()}
+      </div>
+      <div aria-hidden className='py-4' />
     </div>
   );
 };
